@@ -129,6 +129,10 @@ function ply:SaveData()
         file_data.Skills = self.Skills
     end
 
+    if (!file.Exists("gr/player_data/", "DATA")) then
+        file.CreateDir("gr/player_data/")
+    end
+
     file.Write( self:GetFileName(), util.TableToJSON(file_data))
 end
 
@@ -139,7 +143,7 @@ end
 function ply:ReadData()
 
     if (!file.Exists( self:GetFileName(), "DATA")) then
-        return {}
+        return
     end
 
     local file_data = util.JSONToTable(file.Read( self:GetFileName(), "DATA"))
