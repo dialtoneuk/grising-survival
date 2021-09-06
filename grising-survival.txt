@@ -1,0 +1,6 @@
+"gmstranded-lyds-edit" {
+	"base" "sandbox"
+	"title" "GRising Survival Test"
+	"maps" "^gr_"
+	"menusystem" "1"
+}
