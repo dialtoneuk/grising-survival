@@ -16,11 +16,20 @@ function GM.RegisterRecepies(tab)
             error("ingredients are empty")
         end
 
+        if (v.SkillAdvancements and !v.SkillAdvancements.Crafting) then
+            v.SkillAdvancements.Crafting = 5
+        end
+
         GM.RegisterRecepie(table.Merge(v, {
             Description = "Unknown",
             Admin = false,
-            XP = 0,
-            Server = false
+            SkillAdvancements = {
+                Crafting = 5
+            },
+            Rewards = {},
+            Server = false,
+            SkillRequirements = {}, --
+            Icon = "icon32/unknown.png"
         }))
     end
 end

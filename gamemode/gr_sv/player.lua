@@ -86,6 +86,22 @@ function ply:CanCraft(schema)
     return true
 end
 
+function ply:HasSkillRequirements(requirements)
+
+    for k,v in pairs(requirements) do
+
+        if (!self.Skills[k]) then
+            return false
+        end
+
+        if (self.Skills[k].Level < v ) then
+            return false
+        end
+    end
+
+    return true
+end
+
 function ply:TakeCraftResources(schema)
     for k,v in pair(schema) do
         if (!self.Resources[k]) then

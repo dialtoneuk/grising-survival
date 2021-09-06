@@ -35,62 +35,19 @@ for k,v in pairs(file.Find("gr_cl/*.lua","LUA")) do
     end
 end
 
-/*
-    Hooks
-*/
+--loads the game folder which contains hooks which load various shared resources such as resources and recepies
+for k,v in pairs(file.Find("gr_game/*.lua","LUA")) do
+    if (SERVER) then
+        AddCSLuaFile("gr_game/" .. v)
+    end
+    include("gr_game/" .. v)
 
---registers our resources
-hook.Add("PostGamemodeLoaded","RegisterResources", function()
-
-    local resources = {
-        Wood = {
-            Value = 15, --sale value
-            Admin = false, --not an admin item
-            Use = function()
-                --potential use function
-            end
-        },
-        Stone = {
-            Value = 15,
-        },
-        Special_Stone = {
-            Value = 15,
-            Admin = true
-        },
-        Crabs = {
-            Comment = "Its tasty!"
-        }
-    }
-
-    GM.RegisterResources(resources)
-end)
-
---registers our recepies
-hook.Add("PostGamemodeLoaded","RegisterRecepies", function()
-
-    local recepies = {
-        Wooden_Bowl = {
-            Ingredients = {
-                Wood = 15
-            },
-            XP = 15 --15 xp for crafting
-        },
-        --admin only
-        Special_Wooden_Bowl = {
-            Ingredients = {
-                Wood = 15
-            },
-            Admin = true,
-            XP = 15 --15 xp for crafting
-        },
-    }
-
-    GM.RegisterRecepies(recepies)
-end)
-
+    GM.Files.Shared =  GM.Files.Shared or {}
+    GM.Files.Shared["gr_game/" .. v] = v
+end
 
 /*
-    Gamemode Overrides
+    Gamemode
 */
 
 function GM:Initialize()
