@@ -1,6 +1,6 @@
 
---gets the location of the users persistant data file
-function GM.GetPeristantDataFilename(ply)
+--gets the location of the users persistent data file
+function GM.GetPeristentDataFilename(ply)
     if (not IsPlayer(ply)) then
         error("tried to get filename for non player entity")
     end

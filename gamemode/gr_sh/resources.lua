@@ -16,7 +16,7 @@ function GM.RegisterResource(res)
         error("Name is required")
     end
 
-    GM.Resources[res.Name] = table.Copy(table.Merge(res, {
+    GM.Resources[res.Name] = table.Merge(res, {
         Admin = false,
         Value = 1,
         Use = false,
@@ -24,7 +24,7 @@ function GM.RegisterResource(res)
         Model = "models/player/kleiner.mdl",
         Server = false,
         Description = "A mysteriously unknown item."
-    }))
+    })
 end
 
 function GM.ResourceExists(name)

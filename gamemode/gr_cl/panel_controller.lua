@@ -7,14 +7,7 @@ function GM.RegisterPanels(panels)
             v.Element = k
         end
 
-        GM.RegisterPanel(table.Merge(v, {
-            Admin = false,
-            Hidden = true,
-            Panel = nil,
-            OnContext = nil,
-            OnScoreboard = nil,
-            PostInit = nil
-        }))
+        GM.RegisterPanel(v)
     end
 end
 
@@ -24,7 +17,14 @@ function GM.RegisterPanel(panel)
         error("element required")
     end
 
-    GM.Panels[panel.Element] = table.Copy(panel)
+    GM.Panels[panel.Element] = table.Merge(v, {
+        Admin = false,
+        Hidden = true,
+        Panel = nil,
+        OnContext = nil,
+        OnScoreboard = nil,
+        PostInit = nil
+    })
 end
 
 --creates a panel and shows/hides it if needed, will remove if PostInit returns false
@@ -42,7 +42,7 @@ function GM.CreatePanel(element)
         element.Panel:Hide()
     end
 
-    if (element.PostInit and not v.PostInit(element.Panel)) then
+    if (element.PostInit and type(v.PostInit) == "function" and not v.PostInit(element.Panel)) then
         element.Panel:Remove()
     end
 
@@ -50,13 +50,13 @@ function GM.CreatePanel(element)
 end
 
 -- Creates all of the panels
-function GM.CreateAllPanels(reinstantiate)
-    if (reinstantiate == nil) then
-        reinstantiate = false
+function GM.CreateAllPanels(reinstentiate)
+    if (reinstentiate == nil) then
+        reinstentiate = false
     end
 
     for k, element in pairs(GM.Panels) do
-        if (IsValid(element.Panel) and not reinstantiate) then continue end
+        if (IsValid(element.Panel) and not reinstentiate) then continue end
         GM.CreatePanel(element)
     end
 end

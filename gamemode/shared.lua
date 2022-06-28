@@ -54,8 +54,7 @@ hook.Add("PostGamemodeLoaded", "StartLoadingPhase", function()
     hook.Run("AfterResourcesLoaded") --then load fabricators + any other content that needs resources + recepies loaded on both the server/client
 end)
 
+hook.Add("Initialize", "SharedInitialization", function() end) --shared init stuff
 --[[
     Gamemode
 --]]
-function GM:Initialize()
-end

@@ -1,5 +1,4 @@
 local ply = FindMetaTable("Player")
-
 --server side copy of our skills and resources
 ply.Resources = ply.Resources or {}
 ply.Skills = ply.Skills or {}
@@ -114,7 +113,7 @@ function ply:DeleteResource(key)
 end
 
 --Saves skills/resources for the player to the servers data folder
-function ply:SavePersistantData()
+function ply:SavePersistentData()
     local file_data = {
         Skills = {},
         Resources = {},
@@ -122,18 +121,18 @@ function ply:SavePersistantData()
 
     file_data.Resources = self.Resources or {}
     file_data.Skills = self.Skills or {}
-
-    if (not file.Exists("gr/player_data/", "DATA")) then
-        file.CreateDir("gr/player_data/")
-    end
-
-    file.Write(GM.GetPersistantDataFilename(self), util.TableToJSON(file_data))
+    file.Write(GM.GetPersistentDataFilename(self), util.TableToJSON(file_data))
 end
 
---reads a players persistant data (skills + reources)
-function ply:ReadPersitantData()
-    if (not file.Exists(GM.GetPersistantDataFilename(self), "DATA")) then return end
-    local file_data = util.JSONToTable(file.Read(GM.GetPersistantDataFilename(self), "DATA"))
+--reads a players persistent data (skills + reources)
+function ply:ReadPersitentData()
+    if (not file.Exists(GM.GetPersistentDataFilename(self), "DATA")) then
+        print("Persistant data does not exist for: " .. self:GetName())
+
+        return
+    end
+
+    local file_data = util.JSONToTable(file.Read(GM.GetPersistentDataFilename(self), "DATA"))
     self.Resources = file_data.Resources
     self.Skills = file_data.Skills
 end

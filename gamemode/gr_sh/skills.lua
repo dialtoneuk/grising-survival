@@ -20,12 +20,12 @@ function GM.RegisterSkill(skill)
         error("Key is required")
     end
 
-    GM.Skills[skill.Key] = table.Copy(table.Merge(skill, {
+    GM.Skills[skill.Key] = table.Merge(skill, {
         Admin = false,
         BaseLevelMultiplier = 1.15,
         AddedLevelMultiplier = 0.15,
         LevelCap = 100, --xp required to level up
-    }))
+    })
 end
 
 function GM.SkillExists(Key)

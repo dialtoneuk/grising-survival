@@ -22,7 +22,7 @@ function GM.RegisterRecepie(recepie)
         error("Key is required")
     end
 
-    GM.Recepies[recepie.Key] = table.Copy(table.Merge(recepie, {
+    GM.Recepies[recepie.Key] = table.Merge(recepie, {
         Description = "Unknown",
         Admin = false,
         Rewards = {
@@ -37,5 +37,5 @@ function GM.RegisterRecepie(recepie)
             Crafting = 5,
         }, --
         Icon = "icon32/unknown.png"
-    }))
+    })
 end

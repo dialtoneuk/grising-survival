@@ -32,7 +32,13 @@ function panel:SetResources(resources)
     --TODO: Update already present items
     for k, v in pairs(resources) do
         local elm = vgui.Create("ItemIcon", self.Grid)
-        elm:SetResource(v)
+
+        elm:SetResource(table.Merge(table.Copy(GM.Resources[k] or {}), {
+            Name = "Unknown",
+            Key = k,
+            Amount = v or 0
+        }))
+
         self.Grid:AddItem(elm)
     end
 end
