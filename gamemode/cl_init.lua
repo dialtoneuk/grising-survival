@@ -1,7 +1,9 @@
 include("shared.lua")
 
 --don't draw these hud elements as we have our own
-GM.HUDIgnore = {"CHudHealth"}
+GM.HUDIgnore = {
+    CHudHealth = true
+}
 
 --[[
 	Fonts
@@ -28,7 +30,7 @@ surface.CreateFont("IconFont", {
 	Hooks
 --]]
 hook.Add("HUDSHouldDraw", "HUDIgnore", function(name)
-    if (table.HasValue(GM.HudIgnore, name)) then return false end
+    return GM.HUDIgnore[name] == true
 end)
 
 --[[
