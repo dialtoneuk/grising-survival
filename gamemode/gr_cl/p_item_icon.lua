@@ -23,4 +23,4 @@ function panel:SetResource(resource)
     self.Icon:SetModel(resource.Model)
 end
 
-vgui.Register("ItemIcon", panel, "DPanel")
+vgui.Register("ItemIcon", panel, "BasePanel")

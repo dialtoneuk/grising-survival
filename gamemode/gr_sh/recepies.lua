@@ -1,40 +1,41 @@
 GM.Receipes = GM.Receipes or {}
 
 function GM.RegisterRecepies(tab)
-
-    for k,v in pairs(tab) do
-
-        if (!v.Key) then
+    for k, v in pairs(tab) do
+        if (not v.Key) then
             v.Key = k
         end
 
-        if (v.Server != nil and ((v.Server and CLIENT ) or (!v.Server and SERVER))) then
-            continue
+        --Server only recepies are secret and not shared with the client
+        if (v.Server ~= nil and (v.Server and CLIENT)) then continue end
+
+        if (not v.Resources or table.IsEmpty( v.Resources )) then
+            error("recepie ingredients are empty")
         end
 
-        if (!v.Ingredients or table.IsEmpty(v.Ingredients)) then
-            error("ingredients are empty")
-        end
-
-        if (v.SkillAdvancements and !v.SkillAdvancements.Crafting) then
-            v.SkillAdvancements.Crafting = 5
-        end
-
-        GM.RegisterRecepie(table.Merge(v, {
-            Description = "Unknown",
-            Admin = false,
-            SkillAdvancements = {
-                Crafting = 5
-            },
-            Rewards = {},
-            Server = false,
-            SkillRequirements = {}, --
-            Icon = "icon32/unknown.png"
-        }))
+        GM.RegisterRecepie(v)
     end
 end
 
 function GM.RegisterRecepie(recepie)
-    if (!recepie.Key) then error("Key is required") end
-    GM.Recepies[recepie.Key] = table.Copy(recepie)
+    if (not recepie.Key) then
+        error("Key is required")
+    end
+
+    GM.Recepies[recepie.Key] = table.Copy(table.Merge(recepie, {
+        Description = "Unknown",
+        Admin = false,
+        Rewards = {
+            Entities = {},
+            Weapons = {},
+            Experience = {},
+            Resources = {}
+        },
+        Server = false,
+        Resources = {},
+        Requirements = {
+            Crafting = 5,
+        }, --
+        Icon = "icon32/unknown.png"
+    }))
 end

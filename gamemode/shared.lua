@@ -1,23 +1,22 @@
 --sandbox pls
 DeriveGamemode("sandbox")
-
 --autoloader for our scripts
 GM.Files = GM.Files or {}
 
 --loads shared files
-for k,v in pairs(file.Find("gr_sh/*.lua","LUA")) do
+for k, v in pairs(file.Find("gr_sh/*.lua", "LUA")) do
     if (SERVER) then
         AddCSLuaFile("gr_sh/" .. v)
     end
-    include("gr_sh/" .. v)
 
-    GM.Files.Shared =  GM.Files.Shared or {}
+    include("gr_sh/" .. v)
+    GM.Files.Shared = GM.Files.Shared or {}
     GM.Files.Shared["gr_sh/" .. v] = v
 end
 
 --loads server files (does not index dirs)
 if (SERVER) then
-    for k,v in pairs(file.Find("gr_sv/*.lua","LUA")) do
+    for k, v in pairs(file.Find("gr_sv/*.lua", "LUA")) do
         include("gr_sv/" .. v)
         GM.Files.Server = GM.Files.Server or {}
         GM.Files.Server["gr_sv/" .. v] = v
@@ -25,7 +24,7 @@ if (SERVER) then
 end
 
 --loads client files (does not index dirs)
-for k,v in pairs(file.Find("gr_cl/*.lua","LUA")) do
+for k, v in pairs(file.Find("gr_cl/*.lua", "LUA")) do
     if (SERVER) then
         AddCSLuaFile("gr_cl/" .. v)
     else
@@ -35,21 +34,28 @@ for k,v in pairs(file.Find("gr_cl/*.lua","LUA")) do
     end
 end
 
---loads the game folder which contains hooks which load various shared resources such as resources and recepies
-for k,v in pairs(file.Find("gr_game/*.lua","LUA")) do
+--loads the game folder which contains shared resources such as resources and recepies
+for k, v in pairs(file.Find("gr_game/*.lua", "LUA")) do
     if (SERVER) then
         AddCSLuaFile("gr_game/" .. v)
     end
-    include("gr_game/" .. v)
 
-    GM.Files.Shared =  GM.Files.Shared or {}
+    include("gr_game/" .. v)
+    GM.Files.Shared = GM.Files.Shared or {}
     GM.Files.Shared["gr_game/" .. v] = v
 end
 
-/*
-    Gamemode
-*/
+--[[
+    Shared hooks
+--]]
+hook.Add("PostGamemodeLoaded", "StartLoadingPhase", function()
+    hook.Run("RegisterResources") --load resources first
+    hook.Run("RegisterRecepies") --then load the recepiees
+    hook.Run("AfterResourcesLoaded") --then load fabricators + any other content that needs resources + recepies loaded on both the server/client
+end)
 
+--[[
+    Gamemode
+--]]
 function GM:Initialize()
-    --todo
 end

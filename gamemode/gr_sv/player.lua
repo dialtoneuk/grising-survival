@@ -1,10 +1,15 @@
 local ply = FindMetaTable("Player")
 
+--server side copy of our skills and resources
 ply.Resources = ply.Resources or {}
 ply.Skills = ply.Skills or {}
 
 function ply:IncreaseSkill(skill, value)
     value = value or 1
+
+    if (GM.Skills[skill] == nil) then
+        error("Tried to add skill which does not exist: " + skill)
+    end
 
     if (self.Skills[skill]) then
         self.Skills[skill] = {
@@ -19,22 +24,18 @@ function ply:IncreaseSkill(skill, value)
 end
 
 function ply:GetSkillLevel(skill)
-
-    if (!self.Skills[skill]) then
-        return 0
-    end
+    if (not self.Skills[skill]) then return 0 end
 
     return self.Skills[skill].Level
 end
 
 function ply:CheckSkills()
-    for k,v in pairs(self.Skills) do
-
-        if (!GM.SkillExists(k)) then
+    for k, v in pairs(self.Skills) do
+        if (not GM.SkillExists(k)) then
             error("skill does not exist")
         end
 
-        if (v.XP >= GM.GetSkillLevelCap(k) ) then
+        if (v.XP >= GM.GetSkillLevelCap(k)) then
             self.Skills[k].XP = 0
             self.Skills[k].Level = self.Skills[k].Level + 1
         end
@@ -46,71 +47,45 @@ function ply:GetResource(key)
 end
 
 function ply:HasResource(key)
-    return self.Resources[key] != nil
-end
-
-function ply:SendResources()
-    net.Start("SendResources")
-        net.WriteTable(self.Resources)
-    net.Send(self)
-end
-
-function ply:SendSkills()
-    net.Start("SendResources")
-        net.WriteTable(self.Skills)
-    net.Send(self)
+    return self.Resources[key] ~= nil and self.Resources[key] >= 0
 end
 
 function ply:IncreaseResource(key, amount)
     amount = amount or 1
 
-    if (!self.Resources[key]) then
+    if (not self.Resources[key]) then
         self.Resources[key] = amount
     end
 
     self.Resources[key] = self.Resources[key] + amount
 end
 
-function ply:CanCraft(schema)
-
-    for k,v in pair(schema) do
-        if (!self.Resources[k]) then
-            return false
-        end
-
-        if (self.Resources[k] - v < 0 ) then
-            return false
-        end
+function ply:CanCraft(recepie)
+    for k, v in pair(recepie.resources or recepie) do
+        if (not self.Resources[k]) then return false end
+        if (self.Resources[k] - v < 0) then return false end
     end
+
+    if (recepie.requirements ~= nil) then return self:HasSkillRequirements(recepie.requirements) end
 
     return true
 end
 
 function ply:HasSkillRequirements(requirements)
-
-    for k,v in pairs(requirements) do
-
-        if (!self.Skills[k]) then
-            return false
-        end
-
-        if (self.Skills[k].Level < v ) then
-            return false
-        end
+    for k, v in pairs(requirements) do
+        if (not self.Skills[k]) then return false end
+        if (self.Skills[k].Level < v) then return false end
     end
 
     return true
 end
 
-function ply:TakeCraftResources(schema)
-    for k,v in pair(schema) do
-        if (!self.Resources[k]) then
-            continue
-        end
-
+function ply:TakeCraftResources(recepie)
+    for k, v in pair(recepie) do
+        if (not self.Resources[k]) then continue end
         self.Resources[k] = self.Resources[k] - v
 
-        if (self.Resources[k] <= 0 ) then
+        if (self.Resources[k] <= 0) then
             self.Resources[k] = nil
         end
     end
@@ -118,10 +93,18 @@ end
 
 function ply:DecreaseResource(key, amount)
     amount = amount or 1
-    self.Resources[key] = self.Resources[key] - amount
+    self.Resources[key] = math.max(0, self.Resources[key] - amount)
+
+    if (self.Resources[key] <= 0) then
+        self.Resources[key] = nil
+    end
 end
 
 function ply:AddResource(key, start_value)
+    if (GM.Resources[key] == nil) then
+        error("tried to add unknown resource to player: " .. key)
+    end
+
     start_value = start_value or 0
     self.Resources[key] = start_value
 end
@@ -130,40 +113,27 @@ function ply:DeleteResource(key)
     self.Resources[key] = nil
 end
 
-function ply:SaveData()
-
+--Saves skills/resources for the player to the servers data folder
+function ply:SavePersistantData()
     local file_data = {
         Skills = {},
         Resources = {},
     }
 
-    if (!table.IsEmpty(self.Resources)) then
-        file_data.Resources = self.Resources
-    end
+    file_data.Resources = self.Resources or {}
+    file_data.Skills = self.Skills or {}
 
-    if (!table.IsEmpty(self.Skills)) then
-        file_data.Skills = self.Skills
-    end
-
-    if (!file.Exists("gr/player_data/", "DATA")) then
+    if (not file.Exists("gr/player_data/", "DATA")) then
         file.CreateDir("gr/player_data/")
     end
 
-    file.Write( self:GetFileName(), util.TableToJSON(file_data))
+    file.Write(GM.GetPersistantDataFilename(self), util.TableToJSON(file_data))
 end
 
-function ply:GetFileName()
-    return "gr/player_data/" .. self:SteamID64() .. ".json"
-end
-
-function ply:ReadData()
-
-    if (!file.Exists( self:GetFileName(), "DATA")) then
-        return
-    end
-
-    local file_data = util.JSONToTable(file.Read( self:GetFileName(), "DATA"))
-
+--reads a players persistant data (skills + reources)
+function ply:ReadPersitantData()
+    if (not file.Exists(GM.GetPersistantDataFilename(self), "DATA")) then return end
+    local file_data = util.JSONToTable(file.Read(GM.GetPersistantDataFilename(self), "DATA"))
     self.Resources = file_data.Resources
     self.Skills = file_data.Skills
 end

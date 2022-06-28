@@ -5,12 +5,12 @@ base.Inverted = {
     Y = false
 }
 
-function base:SetInverted(x, y)
-
-    if (y == nil ) then
+function base:SetPositionInverted(x, y)
+    if (y == nil) then
         y = false
     end
-    if (x == nil ) then
+
+    if (x == nil) then
         x = false
     end
 
@@ -21,74 +21,62 @@ function base:SetInverted(x, y)
 end
 
 function base:SetDockPadding(val)
-
     self:DockPadding(val, val, val, val)
 end
 
 function base:SetDockMargin(val)
-
     self:DockMargin(val, val, val, val)
 end
 
-function base:MyThink()
-    --over ride me
-end
 
 function base:SetPanelSize(width, height)
     width = width or 400
     height = height or width
-
     self:SetWide(width)
     self:SetTall(height)
 end
 
---will divide the screen space to scale the panel
-function base:SetPanelScale(width, height, numerical_height)
-    width = width or 5 --1/5 of the screen
-    height = height or width --1/5 of the screen
+--will divide the screen space to scale the panel, if the third option is set wll treat width as precentage value
+--if four arg is set to true then will treat height as percentage value
+function base:SetPanelScale(width, height, percentage_value_width, percentage_value_height)
+    width = width or 25 --1/4 of the screen
+    height = height or width
+    percentage_value_height = percentage_value_height or false
+    percentage_value_width = percentage_value_width or false
 
-    if (numerical_height == nil ) then
-        numerical_height = true
-    end
-
-    self:SetWide(width / ScrW())
-
-    if (numerical_height) then
+    if (percentage_value_height ~= true) then
         self:SetTall(height)
     else
-        self:SetTall(height / ScrH())
+        self:SetTall(ScrH() * (height / 100))
     end
 
+    if (percentage_value_width ~= true) then
+        self:SetWide(width)
+    else
+        self:SetWide(ScrW() * (width / 100))
+    end
 end
 
 function base:SetPosition(x, y)
-
     if (self.Inverted.X) then
-        x = ScrW() - ( x + self:GetWide() )
+        x = ScrW() - (x + self:GetWide())
     end
 
     if (self.Inverted.Y) then
-        y = ScrW() -  ( y + self:GetTall() )
+        y = ScrW() - (y + self:GetTall())
     end
 
-    self:SetPos(x, y )
+    self:SetPos(x, y)
 end
 
-function base:InstantiatePanel()
+function base:Think()
+    --base think
+end
 
-    self._Think = self.Think
-    self.Think = function()
-
-        self:_Think()
-        if (self.MyThink) then
-            self:MyThink()
-        end
-    end
-
-    --todo: settings load here in the future
+function base:Init()
+    --base init
 end
 
 local panel = table.Copy(base)
-
-vgui.Register("Base", base, "DFrame")
+vgui.Register("BaseFrame", base, "DFrame")
 vgui.Register("BasePanel", panel, "DPanel")
