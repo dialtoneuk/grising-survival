@@ -1,10 +1,10 @@
 local panel = {}
 --get the metatable for the base panel
-DEFINE_BASECLASS("Base")
+DEFINE_BASECLASS("BaseFrame")
 
 function panel:Init()
     --call base init
-    BaseClass.Init()
+    BaseClass:Init()
     self:SetPositionInverted(true, false) --will position right to left instead
     --third argument specifies that we are using a precentage of the screen for scale, since forth argument
     --is not passed and equal to true the second parameter will be treat as a normal px value
