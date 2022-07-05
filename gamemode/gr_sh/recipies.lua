@@ -1,28 +1,28 @@
-GM.Receipes = GM.Receipes or {}
+GM.recipies = GM.recipies or {}
 
-function GM.RegisterRecepies(tab)
+function GM.RegisterRecipies(tab)
     for k, v in pairs(tab) do
         if (not v.Key) then
             v.Key = k
         end
 
-        --Server only recepies are secret and not shared with the client
+        --Server only recipies are secret and not shared with the client
         if (v.Server ~= nil and (v.Server and CLIENT)) then continue end
 
         if (not v.Resources or table.IsEmpty( v.Resources )) then
-            error("recepie ingredients are empty")
+            error("recipie ingredients are empty")
         end
 
-        GM.RegisterRecepie(v)
+        GM.RegisterRecipie(v)
     end
 end
 
-function GM.RegisterRecepie(recepie)
-    if (not recepie.Key) then
+function GM.RegisterRecipie(recipie)
+    if (not recipie.Key) then
         error("Key is required")
     end
 
-    GM.Recepies[recepie.Key] = table.Merge(recepie, {
+    GM.Recipies[recipie.Key] = table.Merge(recipie, {
         Description = "Unknown",
         Admin = false,
         Rewards = {

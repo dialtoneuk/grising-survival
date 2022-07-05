@@ -1,7 +1,7 @@
---registers our recepies
-hook.Add("RegisterRecepies", "BaseRegisterRecepies", function()
-    local recepies = {
-        --You add the recepie by the key below to the fabricator directly
+--registers our recipies
+hook.Add("RegisterRecipies", "BaseRegisterRecipies", function()
+    local recipies = {
+        --You add the recipie by the key below to the fabricator directly
         Wooden_Bowl = {
             Description = "Craft yourself a pretty boring wooden bowl",
             Resources = {
@@ -19,5 +19,5 @@ hook.Add("RegisterRecepies", "BaseRegisterRecepies", function()
         }
     }
 
-    GM.RegisterRecepies(recepies)
+    GM.RegisterRecipies(recipies)
 end)

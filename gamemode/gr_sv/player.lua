@@ -59,13 +59,13 @@ function ply:IncreaseResource(key, amount)
     self.Resources[key] = self.Resources[key] + amount
 end
 
-function ply:CanCraft(recepie)
-    for k, v in pair(recepie.resources or recepie) do
+function ply:CanCraft(recipie)
+    for k, v in pair(recipie.resources or recipie) do
         if (not self.Resources[k]) then return false end
         if (self.Resources[k] - v < 0) then return false end
     end
 
-    if (recepie.requirements ~= nil) then return self:HasSkillRequirements(recepie.requirements) end
+    if (recipie.requirements ~= nil) then return self:HasSkillRequirements(recipie.requirements) end
 
     return true
 end
@@ -79,8 +79,8 @@ function ply:HasSkillRequirements(requirements)
     return true
 end
 
-function ply:TakeCraftResources(recepie)
-    for k, v in pair(recepie) do
+function ply:TakeCraftResources(recipie)
+    for k, v in pair(recipie) do
         if (not self.Resources[k]) then continue end
         self.Resources[k] = self.Resources[k] - v
 

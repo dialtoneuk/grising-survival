@@ -34,7 +34,7 @@ for k, v in pairs(file.Find("gr_cl/*.lua", "LUA")) do
     end
 end
 
---loads the game folder which contains shared resources such as resources and recepies
+--loads the game folder which contains shared resources such as resources and recipies
 for k, v in pairs(file.Find("gr_game/*.lua", "LUA")) do
     if (SERVER) then
         AddCSLuaFile("gr_game/" .. v)
@@ -50,8 +50,8 @@ end
 --]]
 hook.Add("PostGamemodeLoaded", "StartLoadingPhase", function()
     hook.Run("RegisterResources") --load resources first
-    hook.Run("RegisterRecepies") --then load the recepiees
-    hook.Run("AfterResourcesLoaded") --then load fabricators + any other content that needs resources + recepies loaded on both the server/client
+    hook.Run("RegisterRecipies") --then load the recipiees
+    hook.Run("AfterResourcesLoaded") --then load fabricators + any other content that needs resources + recipies loaded on both the server/client
 end)
 
 hook.Add("Initialize", "SharedInitialization", function() end) --shared init stuff

@@ -3,8 +3,8 @@ GM.Panels = GM.Panels or {}
 --Registers a panel so that it can be created when we need it
 function GM.RegisterPanels(panels)
     for k, v in pairs(panels) do
-        if (not v.Element) then
-            v.Element = k
+        if (not v.Class) then
+            v.Class = k
         end
 
         GM.RegisterPanel(v)
@@ -13,13 +13,14 @@ end
 
 --Registers a panel
 function GM.RegisterPanel(panel)
-    if (not panel.Element) then
+    if (not panel.Class) then
         error("element required")
     end
 
-    GM.Panels[panel.Element] = table.Merge(v, {
+    GM.Panels[panel.Class] = table.Merge(v, {
         Admin = false,
         Hidden = true,
+        Class = panel.Class,
         Panel = nil,
         OnContext = nil,
         OnScoreboard = nil,
@@ -27,14 +28,14 @@ function GM.RegisterPanel(panel)
     })
 end
 
---creates a panel and shows/hides it if needed, will remove if PostInit returns false
+--creates a panel from a table and shows/hides it if needed, will remove if PostInit returns false
 function GM.CreatePanel(element)
     if (IsValid(element.Panel)) then
         element.Panel:Remove()
     end
 
     if (element.Admin and not LocalPlayer():IsAdmin()) then continue end
-    element.Panel = vgui.Create(element.Element)
+    element.Panel = vgui.Create(element.Class)
 
     if (not element.Hidden) then
         element.Panel:Show()
@@ -50,13 +51,13 @@ function GM.CreatePanel(element)
 end
 
 -- Creates all of the panels
-function GM.CreateAllPanels(reinstentiate)
-    if (reinstentiate == nil) then
-        reinstentiate = false
+function GM.CreateAllPanels(reinstantiate)
+    if (reinstantiate == nil) then
+        reinstantiate = false
     end
 
     for k, element in pairs(GM.Panels) do
-        if (IsValid(element.Panel) and not reinstentiate) then continue end
+        if (IsValid(element.Panel) and not reinstantiate) then continue end
         GM.CreatePanel(element)
     end
 end

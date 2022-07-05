@@ -8,7 +8,7 @@ function panel:Init()
     self:SetPositionInverted(true, false) --will position right to left instead
     --third argument specifies that we are using a precentage of the screen for scale, since forth argument
     --is not passed and equal to true the second parameter will be treat as a normal px value
-    self:SetPanelScale(10, 400, true) --Will take up 10% of the screen and be 400 tall
+    self:SetSizeScaled(10, 400, true) --Will take up 10% of the screen and be 400px tall
     self:SetPosition(10, 10) --Position is flipped horiziontally so the origin will be the top right of screen
     --Create neccesary components for the panel to function
     self.Grid = vgui.Create("DGrid", self)
@@ -43,6 +43,10 @@ function panel:SetResources(resources)
     end
 end
 
+function panel:Think()
+    BaseClass:Think()
+end
+
 function panel:Paint()
     surface.SetDrawColor(GM.Colours.FadedGray)
     surface.DrawRect(0, 0, self:GetTall(), self:GetWide())
@@ -50,4 +54,4 @@ function panel:Paint()
     surface.DrawOutlinedRect(0, 0, self:GetTall(), self:GetWide(), 1)
 end
 
-vgui.Register("InventoryHud", panel, "BaseFrame")
+vgui.Register("HudInventory", panel, "BaseFrame")

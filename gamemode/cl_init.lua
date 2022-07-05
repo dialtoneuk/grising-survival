@@ -39,12 +39,14 @@ end)
 --registers panels used by GM the moment we are ready
 function GM:Initialize()
     local panels = {
-        --our inventory hud panel
-        InventoryHud = {
+        --our inventory hud panel, the key name is the VGUI class
+        HudInventory = {
             Admin = false,
             Hidden = false,
+            --Class = "VGUIClass", --can specify the VGUI class like this
             OnContext = function(panel, opened) end,
             OnScoreboard = function(panel, opened) end,
+            PostInit = function(panel, opened) return true end, --return false will remove panel
         }
     }
 

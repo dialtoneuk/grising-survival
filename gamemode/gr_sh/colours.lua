@@ -1,7 +1,7 @@
 GM.GeneratedColours = GM.GeneratedColours or {}
 
 --the colours for our stuff
-GM.Colours = {
+GM.Colours = GM.Colours or {
     Black = Color(35, 35, 35),
     Gray = Color(145, 145, 145),
     PitchBlack = Color(0, 0, 0),

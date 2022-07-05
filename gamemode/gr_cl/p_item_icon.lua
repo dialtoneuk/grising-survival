@@ -1,6 +1,7 @@
 local panel = {}
-panel.Model = ""
+panel.Model = "models/props_borealis/bluebarrel001.mdl"
 panel.Name = "Unknown"
+panel.Resource = {}
 panel.Key = ""
 panel.Amount = 0
 
@@ -10,8 +11,8 @@ function panel:Init()
 end
 
 function panel:Paint()
-    draw.SimpleText(panel.Name, "IconFont", 0, 0)
-    draw.SimpleText(panel.Amount .. "x", "IconFont", 0, self:GetTall() - 12)
+    draw.SimpleText(self.Name, "IconFont", 0, 0)
+    draw.SimpleText(self.Amount .. "x", "IconFont", 0, self:GetTall() - 12)
 end
 
 function panel:SetResource(resource)
@@ -24,7 +25,8 @@ function panel:SetResource(resource)
     self.Key = resource.Key
     self.Amount = resource.Amount or "0"
     self.Name = resource.Name or "Unknown"
-    self.Icon:SetModel(resource.Model or "models/props_borealis/bluebarrel001.mdl")
+    self.Icon:SetModel(resource.Model or self.Model)
+    self.Resource = resource
 end
 
 vgui.Register("ItemIcon", panel, "BasePanel")
